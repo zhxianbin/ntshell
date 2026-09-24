@@ -354,6 +354,30 @@ static void actfunc_delete(ntshell_t *ntshell, vtrecv_action_t action, unsigned 
 }
 
 /**
+ * @brief Find a candidate text string for the suggestion.
+ * @details
+ * If the user provides a suggest callback, it is used as the candidate source.
+ * Otherwise the text history is used as the candidate source for the backward compatibility.
+ *
+ * @param ntshell A handler of the NT-Shell.
+ * @param index An index number of the candidate.
+ * @param text The source text string.
+ * @param buf A pointer to the buffer.
+ * @param siz A size of the buffer.
+ *
+ * @retval 0 Success.
+ * @retval !0 Failure.
+ */
+static int suggest_find(ntshell_t *ntshell,
+        const int index, const char *text, char *buf, const int siz)
+{
+    if (ntshell->func_suggest != 0) {
+        return ntshell->func_suggest(text, index, buf, siz, ntshell->extobj);
+    }
+    return text_history_find(GET_HISTORY(ntshell), index, text, buf, siz);
+}
+
+/**
  * @brief Process for the suggestion action.
  * @details This function change the state of the logical text editor and the view.
  *
@@ -376,8 +400,8 @@ static void actfunc_suggest(ntshell_t *ntshell, vtrecv_action_t action, unsigned
                     SUGGEST_SOURCE(ntshell),
                     sizeof(SUGGEST_SOURCE(ntshell))) > 0) {
             SUGGEST_INDEX(ntshell) = 0;
-            if (text_history_find(
-                        GET_HISTORY(ntshell),
+            if (suggest_find(
+                        ntshell,
                         SUGGEST_INDEX(ntshell),
                         SUGGEST_SOURCE(ntshell),
                         buf,
@@ -404,8 +428,8 @@ static void actfunc_suggest(ntshell_t *ntshell, vtrecv_action_t action, unsigned
          * Search the next suggestion text string.
          */
         SUGGEST_INDEX(ntshell) = SUGGEST_INDEX(ntshell) + 1;
-        if (text_history_find(
-                    GET_HISTORY(ntshell),
+        if (suggest_find(
+                    ntshell,
                     SUGGEST_INDEX(ntshell),
                     SUGGEST_SOURCE(ntshell),
                     buf,
@@ -579,6 +603,7 @@ void ntshell_init(ntshell_t *p,
     NTSHELL_SERIAL_READ func_read,
     NTSHELL_SERIAL_WRITE func_write,
     NTSHELL_USER_CALLBACK func_callback,
+    NTSHELL_USER_SUGGEST_CALLBACK func_suggest,
     void *extobj)
 {
     /*
@@ -588,6 +613,7 @@ void ntshell_init(ntshell_t *p,
     p->func_read = func_read;
     p->func_write = func_write;
     p->func_callback = func_callback;
+    p->func_suggest = func_suggest;
     p->extobj = extobj;
     ntlibc_strcpy(p->prompt, NTSHELL_PROMPT_DEFAULT);
 

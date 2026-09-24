@@ -81,6 +81,7 @@ int main(void)
       func_read,
       func_write,
       func_callback,
+      0,
       (void *)&ntshell);
   ntshell_set_prompt(&ntshell, "BlueTank>");
   ntshell_execute(&ntshell);

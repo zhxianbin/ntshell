@@ -77,7 +77,7 @@ int main(void)
     SystemCoreClockUpdate();
     uart_init();
     uart_puts("User command example for NT-Shell.\r\n");
-    ntshell_init(&nts, serial_read, serial_write, user_callback, extobj);
+    ntshell_init(&nts, serial_read, serial_write, user_callback, 0, extobj);
     ntshell_set_prompt(&nts, "LPC824>");
     while (1) {
         ntshell_execute(&nts);

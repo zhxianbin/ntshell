@@ -47,6 +47,24 @@ typedef int (*NTSHELL_SERIAL_WRITE)(const char *buf, int cnt, void *extobj);
 typedef int (*NTSHELL_USER_CALLBACK)(const char *text, void *extobj);
 
 /**
+ * @brief Callback for the tab completion.
+ * @details
+ * Get the index-th candidate text string whose prefix matches the given text.
+ * This function is called repeatedly with an increasing index while the
+ * user presses the TAB key, until it returns a non-zero value.
+ *
+ * @param text The current text string.
+ * @param index The index number of the candidate.
+ * @param buf A pointer to the buffer for the candidate.
+ * @param siz A size of the buffer.
+ * @param extobj An external object.
+ *
+ * @retval 0 Found a candidate. The candidate is written to the buffer.
+ * @retval !0 Not found.
+ */
+typedef int (*NTSHELL_USER_SUGGEST_CALLBACK)(const char *text, int index, char *buf, int siz, void *extobj);
+
+/**
  * @brief The handler of NT-Shell.
  * @details
  * The best way to provide a handler, We should hide the implementation from the library users.
@@ -65,6 +83,7 @@ typedef struct {
     NTSHELL_SERIAL_READ func_read;
     NTSHELL_SERIAL_WRITE func_write;
     NTSHELL_USER_CALLBACK func_callback;
+    NTSHELL_USER_SUGGEST_CALLBACK func_suggest;
     void *extobj;
     char prompt[NTSHELL_PROMPT_MAXLEN];
 } ntshell_t;
@@ -77,6 +96,7 @@ void ntshell_init(ntshell_t *p,
     NTSHELL_SERIAL_READ func_read,
     NTSHELL_SERIAL_WRITE func_write,
     NTSHELL_USER_CALLBACK func_callback,
+    NTSHELL_USER_SUGGEST_CALLBACK func_suggest,
     void *extobj);
 void ntshell_execute(ntshell_t *p);
 void ntshell_set_prompt(ntshell_t *p, const char *prompt);
