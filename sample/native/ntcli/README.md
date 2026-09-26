@@ -41,8 +41,9 @@ instead.
 ## Build & run
 
 ```sh
-make
-./ntshell_native_ntcli
+meson setup build -Dsamples=true   # run at the repository root
+meson compile -C build
+./build/sample/native/ntcli/ntshell_native_ntcli
 ```
 
 ## Keys

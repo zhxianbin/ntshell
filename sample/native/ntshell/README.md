@@ -5,8 +5,9 @@ A host (Linux) sample for NT-Shell. No cross toolchain is required.
 ## Build & run
 
 ```sh
-make
-./ntshell_native
+meson setup build -Dsamples=true   # run at the repository root
+meson compile -C build
+./build/sample/native/ntshell/ntshell_native
 ```
 
 ## What it demonstrates

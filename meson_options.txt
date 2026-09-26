@@ -1,0 +1,11 @@
+option('samples', type : 'boolean', value : false,
+       description : 'Build the native (host) sample programs')
+
+option('editor_maxlen', type : 'integer', min : 1, value : 64,
+       description : 'Maximum length for the editor module (NTCONF_EDITOR_MAXLEN)')
+
+option('history_depth', type : 'integer', min : 1, value : 8,
+       description : 'Maximum depth for the history module (NTCONF_HISTORY_DEPTH)')
+
+option('cli_max_args', type : 'integer', min : 1, value : 10,
+       description : 'Maximum number of arguments of an input line (NTCONF_CLI_MAX_ARGS)')

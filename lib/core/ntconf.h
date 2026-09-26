@@ -39,19 +39,31 @@
  */
 
 /**
+ * @note
+ * Each definition below can be overridden by the build system, e.g.
+ * with -DNTCONF_EDITOR_MAXLEN=128 or the matching Meson options.
+ */
+
+/**
  * @brief Maximum length for the editor module.
  */
+#ifndef NTCONF_EDITOR_MAXLEN
 #define NTCONF_EDITOR_MAXLEN    (64)
+#endif
 
 /**
  * @brief Maximum depth for the history module.
  */
+#ifndef NTCONF_HISTORY_DEPTH
 #define NTCONF_HISTORY_DEPTH    (8)
+#endif
 
 /**
  * @brief Maximum number of arguments of an input line.
  */
+#ifndef NTCONF_CLI_MAX_ARGS
 #define NTCONF_CLI_MAX_ARGS     (10)
+#endif
 
 #endif
 
