@@ -1,12 +1,12 @@
 /**
- * @file ntconf.h
- * @author CuBeatSystems
- * @author Shinichiro Nakamura
- * @copyright
+ * @file cmd_help.c
+ * @author Xianbin Zhang
+ *
  * ===============================================================
- * Natural Tiny Shell (NT-Shell) Version 0.3.1
+ * Natural Tiny Shell (NT-Shell) native sample - ntcli
  * ===============================================================
  * Copyright (c) 2010-2016 Shinichiro Nakamura
+ * Copyright (c) 2026 Xianbin Zhang
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,28 +30,43 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef NTCONF_H
-#define NTCONF_H
+#include <stdio.h>
+#include "usrcmd.h"
+#include "usrcmd_priv.h"
 
-/**
- * @note
- * This file provides internal definitions for inner modules.
- */
+static int cmd_help(int argc, char *const argv[]);
 
-/**
- * @brief Maximum length for the editor module.
- */
-#define NTCONF_EDITOR_MAXLEN    (64)
+static const char help_text[] =
+    "help\n"
+    "    - print all commands\n"
+    "help command ...\n"
+    "    - print detailed help of 'command'\n"
+    "?\n"
+    "    - alias for help\n";
 
-/**
- * @brief Maximum depth for the history module.
- */
-#define NTCONF_HISTORY_DEPTH    (8)
+const ntcmd_tbl_t g_cmd_help NTCLI_CMD = { "help", cmd_help, help_text, 0 };
+const ntcmd_tbl_t g_cmd_question NTCLI_CMD = { "?", cmd_help, help_text, 0 };
 
-/**
- * @brief Maximum number of arguments of an input line.
- */
-#define NTCONF_CLI_MAX_ARGS     (10)
+static int cmd_help(int argc, char *const argv[])
+{
+    const ntcmd_tbl_t *cmds = usrcmd_get_cmdlist();
+    const int count = usrcmd_get_cmdlist_count();
+    int i;
 
-#endif
-
+    if (argc == 1) {
+        for (i = 0; i < count; i++) {
+            printf("- %s\r\n", cmds[i].name);
+        }
+    } else {
+        for (i = 1; i < argc; i++) {
+            const ntcmd_tbl_t *c =
+                ntcmd_find_from_tbl(argv[i], cmds, count);
+            if ((c != NULL) && (c->help != NULL)) {
+                printf("%s\r\n", c->help);
+            } else {
+                printf("Unknown command '%s' - try 'help'\r\n", argv[i]);
+            }
+        }
+    }
+    return NTCMD_RET_SUCCESS;
+}

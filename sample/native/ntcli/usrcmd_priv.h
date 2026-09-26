@@ -1,12 +1,12 @@
 /**
- * @file ntconf.h
- * @author CuBeatSystems
- * @author Shinichiro Nakamura
- * @copyright
+ * @file usrcmd_priv.h
+ * @author Xianbin Zhang
+ *
  * ===============================================================
- * Natural Tiny Shell (NT-Shell) Version 0.3.1
+ * Natural Tiny Shell (NT-Shell) native sample - ntcli
  * ===============================================================
  * Copyright (c) 2010-2016 Shinichiro Nakamura
+ * Copyright (c) 2026 Xianbin Zhang
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,28 +30,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef NTCONF_H
-#define NTCONF_H
+#ifndef USRCMD_PRIV_H
+#define USRCMD_PRIV_H
 
-/**
- * @note
- * This file provides internal definitions for inner modules.
- */
+#include "ntcmd.h"
 
-/**
- * @brief Maximum length for the editor module.
+/*
+ * Place each command entry into a dedicated linker section. The entries are
+ * then contiguous in memory, so usrcmd.c can expose them as a plain
+ * (table, count) pair through the linker-provided __start_/__stop_ symbols,
+ * without modifying the ntcmd core.
  */
-#define NTCONF_EDITOR_MAXLEN    (64)
-
-/**
- * @brief Maximum depth for the history module.
- */
-#define NTCONF_HISTORY_DEPTH    (8)
-
-/**
- * @brief Maximum number of arguments of an input line.
- */
-#define NTCONF_CLI_MAX_ARGS     (10)
+#define NTCLI_CMD __attribute__((used, section("ntcli_cmd")))
 
 #endif
-

@@ -1,12 +1,12 @@
 /**
- * @file ntconf.h
- * @author CuBeatSystems
- * @author Shinichiro Nakamura
- * @copyright
+ * @file cmd_exit.c
+ * @author Xianbin Zhang
+ *
  * ===============================================================
- * Natural Tiny Shell (NT-Shell) Version 0.3.1
+ * Natural Tiny Shell (NT-Shell) native sample - ntcli
  * ===============================================================
  * Copyright (c) 2010-2016 Shinichiro Nakamura
+ * Copyright (c) 2026 Xianbin Zhang
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,28 +30,23 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef NTCONF_H
-#define NTCONF_H
+#include <stdio.h>
+#include <stdlib.h>
+#include "usrcmd_priv.h"
 
-/**
- * @note
- * This file provides internal definitions for inner modules.
- */
+static int cmd_exit(int argc, char *const argv[]);
 
-/**
- * @brief Maximum length for the editor module.
- */
-#define NTCONF_EDITOR_MAXLEN    (64)
+static const char exit_text[] =
+    "exit\n"
+    "    - exit the shell\n";
 
-/**
- * @brief Maximum depth for the history module.
- */
-#define NTCONF_HISTORY_DEPTH    (8)
+const ntcmd_tbl_t g_cmd_exit NTCLI_CMD = { "exit", cmd_exit, exit_text, 0 };
 
-/**
- * @brief Maximum number of arguments of an input line.
- */
-#define NTCONF_CLI_MAX_ARGS     (10)
-
-#endif
-
+static int cmd_exit(int argc, char *const argv[])
+{
+    (void)argc;
+    (void)argv;
+    printf("bye\r\n");
+    exit(0);
+    return NTCMD_RET_SUCCESS;
+}
